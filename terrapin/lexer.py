@@ -13,10 +13,10 @@ class Lexer(object):
         # Operators
         'EQ', 'NE',
         # Literals
-        'WHITESPACE', 'WORD', 'QUOTEDSTRING', 'STRING',
+        'WS', 'WORD', 'QUOTEDSTRING', 'STRING',
     )
 
-    t_ignore = r' '  # string.whitespace
+    # t_ignore = r' '  # string.whitespace
 
     def token_type(self, value, default):
 
@@ -67,28 +67,35 @@ class Lexer(object):
         t.type = self.token_type(t.value, "WORD")
         return t
 
-    def t_WHITESPACE(self, t):
+    def t_WS(self, t):
         r'[\s]+'
         t.lexer.lineno += t.value.count("\n")
         return t
 
     def t_DOUBLEQUOTEDSTRING(self, t):
-        r'[\"].+[\"]'
+        r'[\"].*?[\"]'
         t.value = t.value[1:-1]
         t.type = self.token_type(t.value, "QUOTEDSTRING")
         return t
 
     def t_SINGLEQUOTEDSTRING(self, t):
-        r'[\'].+[\']'
+        r'[\'].*?[\']'
         t.value = t.value[1:-1]
         t.type = self.token_type(t.value, "QUOTEDSTRING")
         return t
 
     def t_STRING(self, t):
-        r'.+'
+        r'[^\{\}%]+'
         t.type = self.token_type(t.value, "STRING")
         return t
 
     def t_error(self, t):
         print("Lexer Error at {v}" % repr(v=t.value[0]))
         t.lexer.skip(1)
+
+if __name__ == '__main__':
+
+    s = """{% if in_context %}{% if in_context == "Working" %}Working ^^ hello{% endif %}{% endif %}"""
+    toks = Lexer().tokenize(s)
+    for tok in toks:
+        print(tok)
