@@ -5,11 +5,16 @@ from terrapin.lexer import Lexer
 
 class Parser(object):
 
+#     precedence = (
+#         ('left', 'LVARDELIM', 'RVARDELIM', 'LCODEDELIM', 'RCODEDELIM', 'ELSE',
+# 'ENDIF'),
+#     )
+
     def __init__(self):
 
         self.lexer = Lexer()
         self.tokens = self.lexer.tokens
-        self.parser = yacc.yacc(module=self, debug=False)
+        self.parser = yacc.yacc(module=self)
 
     def parse(self, template, context):
 
@@ -21,57 +26,66 @@ class Parser(object):
     def show_tokens(self, template):
         return self.lexer.tokenize(template)
 
-    def p_output(self, p):
-        """output : html
-                  | output output
+    def p_output_list_1(self, p):
+        """output_list : output
         """
-        p[0] = ' '.join([wrd for wrd in p[1:]])
+        p[0] = ''.join([wrd for wrd in p[1:]])
 
-    def p_html(self, p):
-        """html : WORD
-                | STRING
-                | WHITESPACE
-                | variable
-                | html html
+    def p_output_list_2(self, p):
+        """output_list : output_list output
         """
-        p[0] = ' '.join([wrd for wrd in p[1:]])
+        p[0] = ''.join([wrd for wrd in p[1:]])
+
+    def p_output(self, p):
+        """output : block
+                  | WS
+                  | STRING
+                  | WORD
+                  | variable
+        """
+        p[0] = ''.join([wrd for wrd in p[1:]])
 
     def p_variable(self, p):
         'variable : LVARDELIM WORD RVARDELIM'
         p[0] = self.context.get(p[2], '')
 
-    def p_if_statement(self, p):
-        """output : if_result html end_if
-        """
-        p[0] = p[2] if p[1] else ''
-
     def p_if_else_statement(self, p):
-        """output : if_result html else html end_if
+        """block : if_result output_list else output_list end_if
         """
         p[0] = p[2] if p[1] else p[4]
 
-    def p_truthy_if(self, p):
-        """if_result : LCODEDELIM IF WORD RCODEDELIM
+    def p_empty_if_else_statement(self, p):
+        """block : if_result else output_list end_if
         """
-        p[0] = True if p[3] else False
+        p[0] = '' if p[1] else p[3]
+
+    def p_if_statement(self, p):
+        """block : if_result output_list end_if
+        """
+        p[0] = p[2] if p[1] else ''
+
+    def p_truthy_if(self, p):
+        """if_result : LCODEDELIM WS IF WS WORD WS RCODEDELIM
+        """
+        p[0] = True if self.context.get(p[5]) else False
 
     def p_equality_if(self, p):
-        """if_result : LCODEDELIM IF WORD EQ QUOTEDSTRING RCODEDELIM
+        """if_result : LCODEDELIM WS IF WS WORD WS EQ WS QUOTEDSTRING WS RCODEDELIM
         """
-        p[0] = True if self.context.get(p[3]) == p[5] else False
+        p[0] = True if self.context.get(p[5]) == p[9] else False
 
     def p_non_equality_if(self, p):
-        """if_result : LCODEDELIM IF WORD NE QUOTEDSTRING RCODEDELIM
+        """if_result : LCODEDELIM WS IF WS WORD WS NE WS QUOTEDSTRING WS RCODEDELIM
         """
-        p[0] = True if not self.context.get(p[3]) == p[5] else False
+        p[0] = True if not self.context.get(p[5]) == p[9] else False
 
     def p_else(self, p):
-        """else : LCODEDELIM ELSE RCODEDELIM
+        """else : LCODEDELIM WS ELSE WS RCODEDELIM
         """
         p[0] = None
 
     def p_end_if(self, p):
-        """end_if : LCODEDELIM ENDIF RCODEDELIM
+        """end_if : LCODEDELIM WS ENDIF WS RCODEDELIM
         """
         p[0] = None
 
