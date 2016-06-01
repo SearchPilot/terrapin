@@ -18,6 +18,8 @@ version_msg = b"""
 # To bump the version run:
 # git -a tag vx.x.x -m "Tag Message"
 # python setup.py install
+# NB - to push a tag to github you have to run
+# git push origin vx.x.x
 """
 with open(version_py, 'w') as fh:
     message = version_msg + os.linesep.encode('utf-8') + b"__version__=" + version_git
