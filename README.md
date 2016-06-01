@@ -10,7 +10,7 @@ To release a new version making it available to pip install. NB. This doesn't ma
 3. Create pull request & merge into master
 4. `git checkout master`
 5. `git pull origin master`
-6. `git tag -a tag vx.x.x -m "Tag Message"`
+6. `git tag -a vx.x.x -m "Tag Message"`
 7. `git push origin vx.x.x`
 
 ## To pip install
