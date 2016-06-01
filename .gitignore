@@ -5,3 +5,4 @@ parsetab.py
 .cache
 dist
 *.egg-info
+.hypothesis
