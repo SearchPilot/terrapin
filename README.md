@@ -1,21 +1,11 @@
 
-# Terrapin is a lightweight template language
+# Terrapin 
 
-## Release a new version
+Terrapin is a lightweight template language. It uses the [ply]](https://github.com/dabeaz/ply) libary to tokenise and parse. 
 
-To release a new version making it available to pip install. NB. This doesn't make it public, and only allows installation from people with access to the terrapin repository
+## To install
 
-1. Bump version in `setup.py`
-2. `git push origin branch`
-3. Create pull request & merge into master
-4. `git checkout master`
-5. `git pull origin master`
-6. `git tag -a vx.x.x -m "Tag Message"`
-7. `git push origin vx.x.x`
-
-## To pip install
-
-`pip install git+ssh://git@github.com/DistilledLtd/terrapin.git@vx.x.x`
+`pip install terrapin`
 
 ## Usage
 
