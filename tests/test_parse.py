@@ -181,7 +181,14 @@ def test_many_nested_if(n):
 @given(s=text())
 def test_template_error(s):
 
-    invalid_template = "{% if var %}s: {{s}}{% else %}s: {{s}}"
+    invalid_template = "{% if var %}s: {{s}}{% end %}"
 
     with pytest.raises(TemplateError) as te:
         check_equal(invalid_template, {}, '')
+        assert("Template error at line 1" in str(te))
+
+    invalid_template = "{% if var %}s: {{s}}"
+
+    with pytest.raises(TemplateError) as te:
+        check_equal(invalid_template, {}, '')
+        assert("Unknown template error" in str(te))
