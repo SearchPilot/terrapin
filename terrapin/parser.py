@@ -1,14 +1,10 @@
 from ply import yacc
 
 from terrapin.lexer import Lexer
+from terrapin.exceptions import SyntaxError
 
 
 class Parser(object):
-
-#     precedence = (
-#         ('left', 'LVARDELIM', 'RVARDELIM', 'LCODEDELIM', 'RCODEDELIM', 'ELSE',
-# 'ENDIF'),
-#     )
 
     def __init__(self):
 
@@ -91,7 +87,6 @@ class Parser(object):
 
     def p_error(self, p):
         if p:
-            print("Syntax error Line: {l} Pos: {p} at '{s}'".format(
-                l=p.lineno, p=p.lexpos, s=p.value))
+            raise SyntaxError(p.lineno, p.lexpos, p.value)
         else:
-            print("Syntax error at EOF")
+            raise SyntaxError(0, 0, '')
