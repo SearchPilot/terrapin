@@ -1,5 +1,6 @@
 from ply import lex
 
+from terrapin.exceptions import TemplateError
 
 class Lexer(object):
 
@@ -90,8 +91,8 @@ class Lexer(object):
         return t
 
     def t_error(self, t):
-        print("Lexer Error at {v}" % repr(v=t.value[0]))
-        t.lexer.skip(1)
+        raise TemplateError(t.lexer.lineno, t.lexer.lexpos, t.value[:10])
+
 
 if __name__ == '__main__':
 
