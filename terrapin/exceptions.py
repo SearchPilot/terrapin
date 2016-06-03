@@ -11,7 +11,7 @@ class TemplateError(Exception):
     def __init__(self, line_number, position, value, message=None):
         if not message:
             message = "Syntax Error"
-        super(SyntaxError, self).__init__(message)
+        super(TemplateError, self).__init__(message)
         self.line_number = line_number
         self.position = position
         self.value = value
