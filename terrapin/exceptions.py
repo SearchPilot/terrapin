@@ -1,5 +1,5 @@
 
-class SyntaxError(Exception):
+class TemplateError(Exception):
     """Exception raised during parsing of a template
 
     Attributes:

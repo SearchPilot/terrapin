@@ -1,7 +1,7 @@
 from ply import yacc
 
 from terrapin.lexer import Lexer
-from terrapin.exceptions import SyntaxError
+from terrapin.exceptions import TemplateError
 
 
 class Parser(object):
@@ -87,6 +87,6 @@ class Parser(object):
 
     def p_error(self, p):
         if p:
-            raise SyntaxError(p.lineno, p.lexpos, p.value)
+            raise TemplateError(p.lineno, p.lexpos, p.value)
         else:
-            raise SyntaxError(0, 0, '')
+            raise TemplateError(0, 0, '')
