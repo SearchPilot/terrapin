@@ -1,13 +1,14 @@
 from hypothesis import given, assume
 from hypothesis.strategies import text, integers
+import pytest
 
-from terrapin.parser import Parser
+from terrapin.exceptions import TemplateError
+from terrapin import render
 
 
 def check_equal(template, context, expected):
 
-    terrapin = Parser()
-    result = terrapin.parse(template, context)
+    result = render(template, context)
 
     assert result == expected
 
@@ -175,3 +176,12 @@ def test_many_nested_if(n):
     expected = " HELLO "
 
     check_equal(template, context, expected)
+
+
+@given(s=text())
+def test_template_error(s):
+
+    invalid_template = "{% if var %}s: {{s}}{% else %}s: {{s}}"
+
+    with pytest.raises(TemplateError) as te:
+        check_equal(invalid_template, {}, '')
