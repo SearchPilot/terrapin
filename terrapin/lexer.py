@@ -2,6 +2,7 @@ from ply import lex
 
 from terrapin.exceptions import TemplateError
 
+
 class Lexer(object):
 
     reserved = (
@@ -86,13 +87,12 @@ class Lexer(object):
         return t
 
     def t_STRING(self, t):
-        r'[^\{\}%]+'
+        r'([^\{\}]|[\{](?!%|{)|(?<!%|})[\}])+'
         t.type = self.token_type(t.value, "STRING")
         return t
 
     def t_error(self, t):
         raise TemplateError(t.lexer.lineno, t.lexer.lexpos, t.value[:10])
-
 
 if __name__ == '__main__':
 
