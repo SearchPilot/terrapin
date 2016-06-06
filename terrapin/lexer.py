@@ -65,7 +65,7 @@ class Lexer(object):
         return t
 
     def t_WORD(self, t):
-        r'[A-Za-z0-9_]+'
+        r'[A-Za-z0-9_\.]+'
         t.type = self.token_type(t.value, "WORD")
         return t
 
