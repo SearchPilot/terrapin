@@ -6,3 +6,4 @@ parsetab.py
 dist
 *.egg-info
 .hypothesis
+notebooks
