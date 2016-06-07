@@ -2,6 +2,8 @@ from ply import lex
 
 from terrapin.exceptions import TemplateError
 
+word_regex = r'[A-Za-z0-9_\.]+'
+
 
 class Lexer(object):
 
@@ -64,8 +66,9 @@ class Lexer(object):
         r'!='
         return t
 
+    @lex.TOKEN(word_regex)
     def t_WORD(self, t):
-        r'[A-Za-z0-9_\.]+'
+
         t.type = self.token_type(t.value, "WORD")
         return t
 

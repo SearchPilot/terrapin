@@ -1,6 +1,7 @@
 import re
 
 from terrapin.parser import Parser
+from terrapin.lexer import word_regex
 
 
 parser = Parser()
@@ -43,6 +44,6 @@ def find_variables(template):
     This is any string that looks like {{var}}
     """
 
-    capture_variable_regex = '\{\{([\w\.]+?)\}\}'
+    capture_variable_regex = r'\{\{(' + word_regex + r')\}\}'
     found_variables = re.findall(capture_variable_regex, template)
     return list(found_variables)
