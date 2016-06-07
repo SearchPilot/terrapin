@@ -192,3 +192,11 @@ def test_template_error(s):
     with pytest.raises(TemplateError) as te:
         check_equal(invalid_template, {}, '')
         assert("Unknown template error" in str(te))
+
+
+def test_quoty_string():
+
+    template = """<li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{level_up}}" title="{{initial_title}}" itemprop="url"><span itemprop="title">{{initial_title}}</span></a></li>"""
+    context = {}
+    expected = """<li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="" title="" itemprop="url"><span itemprop="title"></span></a></li>"""
+    check_equal(template, context, expected)
