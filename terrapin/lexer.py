@@ -17,7 +17,7 @@ class Lexer(object):
         # Operators
         'EQ', 'NE',
         # Literals
-        'WS', 'WORD', 'QUOTEDSTRING', 'STRING',
+        'WS', 'WORD', 'SINGLEQUOTEDSTRING', 'DOUBLEQUOTEDSTRING', 'STRING',
     )
 
     # t_ignore = r' '  # string.whitespace
@@ -80,13 +80,11 @@ class Lexer(object):
     def t_DOUBLEQUOTEDSTRING(self, t):
         r'[\"].*?[\"]'
         t.value = t.value[1:-1]
-        t.type = self.token_type(t.value, "QUOTEDSTRING")
         return t
 
     def t_SINGLEQUOTEDSTRING(self, t):
         r'[\'].*?[\']'
         t.value = t.value[1:-1]
-        t.type = self.token_type(t.value, "QUOTEDSTRING")
         return t
 
     def t_STRING(self, t):
