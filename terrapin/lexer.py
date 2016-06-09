@@ -17,7 +17,7 @@ class Lexer(object):
         # Operators
         'EQ', 'NE',
         # Literals
-        'WS', 'WORD', 'SINGLEQUOTEDSTRING', 'DOUBLEQUOTEDSTRING', 'STRING',
+        'WS', 'WORD', 'QUOTEDSTRING', 'STRING',
     )
 
     # t_ignore = r' '  # string.whitespace
@@ -77,14 +77,8 @@ class Lexer(object):
         t.lexer.lineno += t.value.count("\n")
         return t
 
-    def t_DOUBLEQUOTEDSTRING(self, t):
-        r'[\"].*?[\"]'
-        t.value = t.value[1:-1]
-        return t
-
-    def t_SINGLEQUOTEDSTRING(self, t):
-        r'[\'].*?[\']'
-        t.value = t.value[1:-1]
+    def t_QUOTEDSTRING(self, t):
+        r"""[\"].*?[\"]|[\'].*?[\']"""
         return t
 
     def t_STRING(self, t):

@@ -37,17 +37,10 @@ class Parser(object):
                   | WS
                   | STRING
                   | WORD
+                  | QUOTEDSTRING
                   | variable
         """
         p[0] = ''.join([wrd for wrd in p[1:]])
-
-    def p_output_single_quote(self, p):
-        'output : SINGLEQUOTEDSTRING'
-        p[0] = "'" + p[1] + "'"
-
-    def p_output_double_quote(self, p):
-        'output : DOUBLEQUOTEDSTRING'
-        p[0] = '"' + p[1] + '"'
 
     def p_variable(self, p):
         'variable : LVARDELIM WORD RVARDELIM'
@@ -73,21 +66,17 @@ class Parser(object):
         """
         p[0] = True if self.context.get(p[5]) else False
 
-    def p_quoted_string(self, p):
-        """quoted_string : SINGLEQUOTEDSTRING
-                         | DOUBLEQUOTEDSTRING
-        """
-        p[0] = p[1]
-
     def p_equality_if(self, p):
-        """if_result : LCODEDELIM WS IF WS WORD WS EQ WS quoted_string WS RCODEDELIM
+        """if_result : LCODEDELIM WS IF WS WORD WS EQ WS QUOTEDSTRING WS RCODEDELIM
         """
-        p[0] = True if self.context.get(p[5]) == p[9] else False
+        unquoted_string = p[9][1:-1]
+        p[0] = True if self.context.get(p[5]) == unquoted_string else False
 
     def p_non_equality_if(self, p):
-        """if_result : LCODEDELIM WS IF WS WORD WS NE WS quoted_string WS RCODEDELIM
+        """if_result : LCODEDELIM WS IF WS WORD WS NE WS QUOTEDSTRING WS RCODEDELIM
         """
-        p[0] = True if not self.context.get(p[5]) == p[9] else False
+        unquoted_string = p[9][1:-1]
+        p[0] = True if not self.context.get(p[5]) == unquoted_string else False
 
     def p_else(self, p):
         """else : LCODEDELIM WS ELSE WS RCODEDELIM
