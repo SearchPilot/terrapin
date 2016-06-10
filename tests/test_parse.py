@@ -83,6 +83,7 @@ def test_equality_if(s):
 
     assume('\n' not in s)
     assume('"' not in s)
+    assume("'" not in s)
 
     template = "{% if var == \"" + s + "\" %}equal{% endif %}"
     context = {
@@ -92,12 +93,17 @@ def test_equality_if(s):
 
     check_equal(template, context, expected)
 
+    # Repeat with single quoted string
+    template = "{% if var == '" + s + "' %}equal{% endif %}"
+    check_equal(template, context, expected)
+
 
 @given(s=text())
 def test_non_equality_if(s):
 
     assume('\n' not in s)
     assume('"' not in s)
+    assume("'" not in s)
 
     template = "{% if var != \"" + s + "\" %}unequal{% else %}equal{% endif %}"
     context = {
@@ -105,6 +111,10 @@ def test_non_equality_if(s):
     }
     expected = "unequal"
 
+    check_equal(template, context, expected)
+
+    # Repeat with single quoted string
+    template = "{% if var != '" + s + "' %}unequal{% else %}equal{% endif %}"
     check_equal(template, context, expected)
 
 
