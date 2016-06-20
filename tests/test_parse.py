@@ -3,7 +3,7 @@ from hypothesis.strategies import text, integers
 import pytest
 
 from terrapin.exceptions import TemplateError
-from terrapin import render
+from terrapin import render, used_variables
 
 
 def check_equal(template, context, expected):
@@ -210,3 +210,16 @@ def test_quoty_string():
     context = {}
     expected = """<li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="" title="" itemprop="url"><span itemprop="title"></span></a></li>"""
     check_equal(template, context, expected)
+
+
+def test_used_variables():
+
+    template = "{{var1}} test {{var2}} {% if var3 == 'hello' %}{{var4}}{% else %}{{var5}}{% endif %}"
+    used = used_variables(template)
+    expected = {"var1", "var2", "var3", "var4", "var5"}
+    assert used == expected
+
+    template = "{{var1}} test {{var2}} {% if var3 != 'hello' %}{{var4}}{% else %}{{var5}}{% endif %}"
+    used = used_variables(template)
+    expected = {"var1", "var2", "var3", "var4", "var5"}
+    assert used == expected

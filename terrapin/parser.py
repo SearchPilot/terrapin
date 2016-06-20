@@ -92,4 +92,4 @@ class Parser(object):
         if p:
             raise TemplateError(p.lineno, p.lexpos, p.value)
         else:
-            raise TemplateError(0, 0, '')
+            raise TemplateError(0, 0, '')\

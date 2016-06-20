@@ -47,3 +47,24 @@ def find_variables(template):
     capture_variable_regex = r'\{\{(' + word_regex + r')\}\}'
     found_variables = re.findall(capture_variable_regex, template)
     return list(found_variables)
+
+
+class ObservingContext(dict):
+    """ Keep a record of which keys have tried to be accessed """
+
+    def __init__(self, *args, **kwargs):
+
+        self.keys_seen = set()
+
+    def get(self, key, *args, **kwargs):
+
+        self.keys_seen.add(key)
+        return super(ObservingContext, self).get(key, *args, **kwargs)
+
+
+def used_variables(template):
+    """ Return a set of used variables in the template """
+
+    context = ObservingContext()
+    parser.parse(template, context)
+    return context.keys_seen
