@@ -1,6 +1,5 @@
 from terrapin.render_full import render_full
 from terrapin.render_simple import render_simple
-from terrapin.used_variables import used_variables
 
 
 def render(template, context):

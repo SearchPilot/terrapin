@@ -1,4 +1,6 @@
 from terrapin.parser import Parser
+from terrapin.render_simple import find_variables
+
 
 parser = Parser()
 
@@ -19,6 +21,9 @@ class ObservingContext(dict):
 def used_variables(template):
     """ Return a set of used variables in the template """
 
-    context = ObservingContext()
-    parser.parse(template, context)
-    return context.keys_seen
+    if '{%' in template:
+        context = ObservingContext()
+        parser.parse(template, context)
+        return context.keys_seen
+    else:
+        return find_variables(template)

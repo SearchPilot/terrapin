@@ -27,4 +27,4 @@ def find_variables(template):
 
     capture_variable_regex = r'\{\{(' + word_regex + r')\}\}'
     found_variables = re.findall(capture_variable_regex, template)
-    return list(found_variables)
+    return set(found_variables)
