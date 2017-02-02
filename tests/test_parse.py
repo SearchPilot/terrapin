@@ -2,8 +2,9 @@ from hypothesis import given, assume
 from hypothesis.strategies import text, integers
 import pytest
 
+from terrapin import render
 from terrapin.exceptions import TemplateError
-from terrapin import render, used_variables
+from terrapin.used_variables import used_variables
 
 
 def check_equal(template, context, expected):
@@ -212,7 +213,25 @@ def test_quoty_string():
     check_equal(template, context, expected)
 
 
-def test_used_variables():
+def test_used_variables_simple():
+
+    template = "{{var1}} test {{var2}}"
+    used = used_variables(template)
+    expected = {"var1", "var2"}
+    assert used == expected
+
+    template = "{{var1}}{{var2}}{{  }}"
+    used = used_variables(template)
+    expected = {"var1", "var2"}
+    assert used == expected
+
+    template = "{{var1}}{{var2}}{{var2}}"
+    used = used_variables(template)
+    expected = {"var1", "var2"}
+    assert used == expected
+
+
+def test_used_variables_full():
 
     template = "{{var1}} test {{var2}} {% if var3 == 'hello' %}{{var4}}{% else %}{{var5}}{% endif %}"
     used = used_variables(template)
