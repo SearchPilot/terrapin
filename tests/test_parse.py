@@ -2,17 +2,9 @@ from hypothesis import given, assume
 from hypothesis.strategies import text, integers
 import pytest
 
-from terrapin import render
 from terrapin.exceptions import TemplateError
 from terrapin.used_variables import used_variables
-
-
-def check_equal(template, context, expected):
-
-    result = render(template, context)
-
-    assert result == expected
-
+from tests.utils import check_equal
 
 @given(s=text())
 def test_variable(s):
