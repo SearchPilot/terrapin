@@ -78,6 +78,26 @@ class Parser(object):
         unquoted_string = p[9][1:-1]
         p[0] = True if not self.context.get(p[5]) == unquoted_string else False
 
+    def p_len_gt_if(self, p):
+        """if_result : LCODEDELIM WS IF WS WORD LEN WS GT WS INT WS RCODEDELIM
+        """
+        p[0] = True if len(self.context.get(p[5])) > int(p[10]) else False
+
+    def p_len_lt_if(self, p):
+        """if_result : LCODEDELIM WS IF WS WORD LEN WS LT WS INT WS RCODEDELIM
+        """
+        p[0] = True if len(self.context.get(p[5])) < int(p[10]) else False
+
+    def p_len_equality_if(self, p):
+        """if_result : LCODEDELIM WS IF WS WORD LEN WS EQ WS INT WS RCODEDELIM
+        """
+        p[0] = True if len(self.context.get(p[5])) == int(p[10]) else False
+
+    def p_len_non_equality_if(self, p):
+        """if_result : LCODEDELIM WS IF WS WORD LEN WS NE WS INT WS RCODEDELIM
+        """
+        p[0] = True if not len(self.context.get(p[5])) == int(p[10]) else False
+
     def p_else(self, p):
         """else : LCODEDELIM WS ELSE WS RCODEDELIM
         """
