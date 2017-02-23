@@ -111,6 +111,98 @@ def test_non_equality_if(s):
     check_equal(template, context, expected)
 
 
+def test_length_gt():
+
+    template = '{% if var.len > 10 %}greater than{% else %}less than{% endif %}'
+    context = {
+        "var": 'long string with more than 10 characters'
+    }
+    expected = 'greater than'
+
+    check_equal(template, context, expected)
+
+    # Repeat with short string
+    context = {
+        "var": 'short'
+    }
+    expected = 'less than'
+    check_equal(template, context, expected)
+
+
+def test_length_lt():
+
+    template = '{% if var.len < 10 %}less than{% else %}greater than{% endif %}'
+    context = {
+        "var": 'long string with more than 10 characters'
+    }
+    expected = 'greater than'
+    check_equal(template, context, expected)
+
+    # Repeat with short string
+    context = {
+        "var": 'short'
+    }
+    expected = 'less than'
+    check_equal(template, context, expected)
+
+
+def test_length_equality():
+
+    template = '{% if var.len == 12 %}equal{% else %}not equal{% endif %}'
+    context = {
+        "var": '12characters'
+    }
+    expected = 'equal'
+    check_equal(template, context, expected)
+
+    # Repeat with short string
+    context = {
+        "var": 'short'
+    }
+    expected = 'not equal'
+    check_equal(template, context, expected)
+
+
+def test_length_non_equality():
+
+    template = '{% if var.len != 12 %}not equal{% else %}equal{% endif %}'
+    context = {
+        "var": '12characters'
+    }
+    expected = 'equal'
+    check_equal(template, context, expected)
+
+    # Repeat with short string
+    context = {
+        "var": 'short'
+    }
+    expected = 'not equal'
+    check_equal(template, context, expected)
+
+
+def test_invalid_len():
+
+    template = '{% if var.len > string %}less than{% endif %}'
+    with pytest.raises(TemplateError) as te:
+        check_equal(template, {}, '')
+        assert("Template error at line 1" in str(te))
+
+    template = '{% if var.len < string %}less than{% endif %}'
+    with pytest.raises(TemplateError) as te:
+        check_equal(template, {}, '')
+        assert("Template error at line 1" in str(te))
+
+    template = '{% if var.len > "string" %}less than{% endif %}'
+    with pytest.raises(TemplateError) as te:
+        check_equal(template, {}, '')
+        assert("Template error at line 1" in str(te))
+
+    template = '{% if var.len < "string" %}less than{% endif %}'
+    with pytest.raises(TemplateError) as te:
+        check_equal(template, {}, '')
+        assert("Template error at line 1" in str(te))
+
+
 @given(s=text(), t=text())
 def test_compund(s, t):
 

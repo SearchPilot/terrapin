@@ -2,7 +2,7 @@ from ply import lex
 
 from terrapin.exceptions import TemplateError
 
-word_regex = r'[A-Za-z0-9_\.]+'
+word_regex = r'[A-Za-z0-9_]+'
 
 
 class Lexer(object):
@@ -15,9 +15,9 @@ class Lexer(object):
         # Code delimiters
         'LCODEDELIM', 'RCODEDELIM', 'LVARDELIM', 'RVARDELIM',
         # Operators
-        'EQ', 'NE',
+        'EQ', 'NE', 'GT', 'LT', 'LEN',
         # Literals
-        'WS', 'WORD', 'QUOTEDSTRING', 'STRING',
+        'WS', 'INT', 'WORD', 'QUOTEDSTRING', 'STRING'
     )
 
     # t_ignore = r' '  # string.whitespace
@@ -66,9 +66,24 @@ class Lexer(object):
         r'!='
         return t
 
+    def t_LT(self, t):
+        r'<'
+        return t
+
+    def t_GT(self, t):
+        r'>'
+        return t
+
+    def t_LEN(self, t):
+        r'\.len'
+        return t
+
+    def t_INT(self, t):
+        r'[0-9]+'
+        return t
+
     @lex.TOKEN(word_regex)
     def t_WORD(self, t):
-
         t.type = self.token_type(t.value, "WORD")
         return t
 
