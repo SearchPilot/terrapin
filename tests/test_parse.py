@@ -34,6 +34,23 @@ def test_truthy_if(s):
 
 
 @given(s=text())
+def test_output_if(s):
+
+    assume(not s == '')
+    assume('{' not in s)
+    assume('}' not in s)
+
+    template = "{% if var %}" + s + "{% endif %}"
+    context = {
+        "var": "on",
+
+    }
+    expected = s
+
+    check_equal(template, context, expected)
+
+
+@given(s=text())
 def test_nested_truthy_if(s):
 
     assume(not s == '')
