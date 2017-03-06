@@ -40,12 +40,12 @@ def test_output_if(s):
     assume('{' not in s)
     assume('}' not in s)
 
-    template = "{% if var %}==" + s + "{% endif %}"
+    template = "{% if var %}" + s + "{% endif %}"
     context = {
         "var": "on",
 
     }
-    expected = '==' + s
+    expected = s
 
     check_equal(template, context, expected)
 

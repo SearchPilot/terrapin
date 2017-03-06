@@ -41,6 +41,7 @@ class Parser(object):
                   | INT
                   | GT
                   | LT
+                  | EQ
                   | variable
         """
         p[0] = ''.join([wrd for wrd in p[1:]])
