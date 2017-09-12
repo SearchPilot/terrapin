@@ -14,6 +14,7 @@ class Parser(object):
 
     def parse(self, template, context):
 
+        self.template = template
         self.context = context
 
         if template:
@@ -122,6 +123,6 @@ class Parser(object):
 
     def p_error(self, p):
         if p:
-            raise TemplateError(p.lineno, p.lexpos, p.value)
+            raise TemplateError(self.template, p.lineno, p.lexpos, p.value)
         else:
-            raise TemplateError(0, 0, '')\
+            raise TemplateError(self.template)
