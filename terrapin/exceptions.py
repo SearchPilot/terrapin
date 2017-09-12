@@ -8,19 +8,17 @@ class TemplateError(Exception):
         value: value when the error occured
     """
 
-    def __init__(self, line_number, position, value, message=None):
-
-        self.line_number = line_number
-        self.position = position
-        self.value = value
+    def __init__(self, template, line_number=0, position=0, value=None, message=None):
 
         if not message:
             if line_number != 0:
-                error_mask = "Template error at line {ln}, position {p} at: {v}"
-                message = error_mask.format(ln=line_number,
-                                            p=position,
-                                            v=value)
+                error_mask = "Template `{ts}` gives error at line {ln}, position {p} at: {v}"
             else:
-                message = "Unknown template error. Have you closed all open tags? e.g. {% endif %}"
+                error_mask = "Template `{ts}` gives unknown error."
+
+            message = error_mask.format(ts=template[:50],
+                                        ln=line_number,
+                                        p=position,
+                                        v=value)
 
         super(TemplateError, self).__init__(message)
