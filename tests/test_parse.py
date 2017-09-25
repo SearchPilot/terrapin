@@ -297,13 +297,15 @@ def test_template_error(s):
 
     with pytest.raises(TemplateError) as te:
         check_equal(invalid_template, {}, '')
-        assert("Template error at line 1" in str(te))
+    assert("Template error at line 1" in str(te.value))
 
     invalid_template = "{% if var %}s: {{s}}"
 
     with pytest.raises(TemplateError) as te:
         check_equal(invalid_template, {}, '')
-        assert("Unknown template error" in str(te))
+
+    assert("Unknown template error" in str(te.value))
+    assert(invalid_template in str(te.value))
 
 
 def test_quoty_string():

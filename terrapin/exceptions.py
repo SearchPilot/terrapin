@@ -8,7 +8,7 @@ class TemplateError(Exception):
         value: value when the error occured
     """
 
-    def __init__(self, line_number, position, value, message=None):
+    def __init__(self, line_number, position, value, message=None, template=None):
 
         self.line_number = line_number
         self.position = position
@@ -22,5 +22,8 @@ class TemplateError(Exception):
                                             v=value)
             else:
                 message = "Unknown template error. Have you closed all open tags? e.g. {% endif %}"
+
+        if template:
+            message += " In template: `{template}`...".format(template=template[:100])
 
         super(TemplateError, self).__init__(message)
