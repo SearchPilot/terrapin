@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='terrapin',
-      version="0.0.19",
+      version="0.0.20",
       packages=find_packages(),
       description='A very lightweight template language',
       url='https://github.com/DistilledLtd/terrapin',

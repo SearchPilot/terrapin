@@ -1,4 +1,4 @@
-from hypothesis import given, assume
+from hypothesis import given, assume, settings
 from hypothesis.strategies import text, integers
 import pytest
 
@@ -302,10 +302,11 @@ def test_template_error(s):
     invalid_template = "{% if var %}s: {{s}}"
 
     with pytest.raises(TemplateError) as te:
-        check_equal(invalid_template, {}, '')
+        check_equal(invalid_template, {"a": "test"}, '')
 
     assert("Unknown template error" in str(te.value))
     assert(invalid_template in str(te.value))
+    assert("With context: {'a': 'test'}" in str(te.value))
 
 
 def test_quoty_string():
