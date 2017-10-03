@@ -10,15 +10,14 @@ class Parser(object):
 
         self.lexer = Lexer()
         self.tokens = self.lexer.tokens
-        self.parser = yacc.yacc(module=self)
+        self.parser = yacc.yacc(module=self, optimize=True)
 
     def parse(self, template, context):
 
-        self.context = context
-        self.template = template
-
+        lexer = Lexer()
+        lexer.lexer.context = context
         if template:
-            return self.parser.parse(template, lexer=self.lexer.lexer)
+            return self.parser.parse(template, lexer=lexer.lexer)
 
     def show_tokens(self, template):
         return self.lexer.tokenize(template)
@@ -49,7 +48,7 @@ class Parser(object):
 
     def p_variable(self, p):
         'variable : LVARDELIM WORD RVARDELIM'
-        p[0] = self.context.get(p[2], '')
+        p[0] = p.lexer.context.get(p[2], '')
 
     def p_if_else_statement(self, p):
         """block : if_result output_list else output_list end_if
@@ -69,19 +68,19 @@ class Parser(object):
     def p_truthy_if(self, p):
         """if_result : LCODEDELIM WS IF WS WORD WS RCODEDELIM
         """
-        p[0] = True if self.context.get(p[5]) else False
+        p[0] = True if p.lexer.context.get(p[5]) else False
 
     def p_equality_if(self, p):
         """if_result : LCODEDELIM WS IF WS WORD WS EQ WS QUOTEDSTRING WS RCODEDELIM
         """
         unquoted_string = p[9][1:-1]
-        p[0] = True if self.context.get(p[5]) == unquoted_string else False
+        p[0] = True if p.lexer.context.get(p[5]) == unquoted_string else False
 
     def p_non_equality_if(self, p):
         """if_result : LCODEDELIM WS IF WS WORD WS NE WS QUOTEDSTRING WS RCODEDELIM
         """
         unquoted_string = p[9][1:-1]
-        p[0] = True if not self.context.get(p[5]) == unquoted_string else False
+        p[0] = True if not p.lexer.context.get(p[5]) == unquoted_string else False
 
     def p_len_gt_if(self, p):
         """if_result : LCODEDELIM WS IF WS word_len WS GT WS cast_int WS RCODEDELIM
@@ -115,7 +114,7 @@ class Parser(object):
 
     def p_word_len(self, p):
         """word_len : WORD LEN"""
-        p[0] = len(self.context.get(p[1], ''))
+        p[0] = len(p.lexer.context.get(p[1], ''))
 
     def p_cast_int(self, p):
         """cast_int : INT"""
@@ -123,6 +122,6 @@ class Parser(object):
 
     def p_error(self, p):
         if p:
-            raise TemplateError(p.lineno, p.lexpos, p.value, template=self.template, context=self.context)
+            raise TemplateError(p.lineno, p.lexpos, p.value, context=p.lexer.context)
         else:
-            raise TemplateError(0, 0, '', template=self.template, context=self.context)
+            raise TemplateError(0, 0, '')
