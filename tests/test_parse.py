@@ -17,6 +17,28 @@ def test_variable(s):
 
     check_equal(template, context, expected)
 
+@given(s=text())
+def test_variable_is_none(s):
+
+    template = "testing {{var}}"
+    context = {
+        "var": None
+    }
+    expected = "testing None"
+
+    check_equal(template, context, expected)
+
+@given(s=text())
+def test_variable_with_number(s):
+
+    template = "testing {{var_5}}"
+    context = {
+        "var_5": s
+    }
+    expected = "testing " + s
+
+    check_equal(template, context, expected)
+
 
 @given(s=text())
 def test_truthy_if(s):
@@ -26,6 +48,21 @@ def test_truthy_if(s):
     template = "{% if var %}hello{% endif %}"
     context = {
         "var": s,
+
+    }
+    expected = "hello"
+
+    check_equal(template, context, expected)
+
+
+@given(s=text())
+def test_truthy_if_with_numbers(s):
+
+    assume(not s == '')
+
+    template = "{% if var_5 %}hello{% endif %}"
+    context = {
+        "var_5": s,
 
     }
     expected = "hello"
@@ -305,8 +342,7 @@ def test_template_error(s):
         check_equal(invalid_template, {"a": "test"}, '')
 
     assert("Unknown template error" in str(te.value))
-    assert(invalid_template in str(te.value))
-    assert("With context: {'a': 'test'}" in str(te.value))
+
 
 
 def test_quoty_string():

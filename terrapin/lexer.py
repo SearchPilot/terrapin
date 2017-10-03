@@ -4,21 +4,24 @@ from terrapin.exceptions import TemplateError
 
 word_regex = r'[A-Za-z0-9_]+'
 
+reserved_tokens = (
+    'IF', 'ELSE', 'ENDIF'
+)
+
+all_tokens = reserved_tokens + (
+    # Code delimiters
+    'LCODEDELIM', 'RCODEDELIM', 'LVARDELIM', 'RVARDELIM',
+    # Operators
+    'EQ', 'NE', 'GT', 'LT', 'LEN',
+    # Literals
+    'WS', 'INT', 'WORD', 'QUOTEDSTRING', 'STRING'
+)
 
 class Lexer(object):
 
-    reserved = (
-        'IF', 'ELSE', 'ENDIF'
-    )
+    reserved = reserved_tokens
 
-    tokens = reserved + (
-        # Code delimiters
-        'LCODEDELIM', 'RCODEDELIM', 'LVARDELIM', 'RVARDELIM',
-        # Operators
-        'EQ', 'NE', 'GT', 'LT', 'LEN',
-        # Literals
-        'WS', 'INT', 'WORD', 'QUOTEDSTRING', 'STRING'
-    )
+    tokens = all_tokens
 
     # t_ignore = r' '  # string.whitespace
 
