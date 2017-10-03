@@ -1,6 +1,6 @@
 from ply import yacc
 
-from terrapin.lexer import Lexer
+from terrapin.lexer import Lexer, all_tokens
 from terrapin.exceptions import TemplateError
 
 
@@ -8,8 +8,7 @@ class Parser(object):
 
     def __init__(self):
 
-        self.lexer = Lexer()
-        self.tokens = self.lexer.tokens
+        self.tokens = all_tokens
         self.parser = yacc.yacc(module=self, optimize=True)
 
     def parse(self, template, context):
